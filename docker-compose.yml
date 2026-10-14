@@ -1,0 +1,49 @@
+# docker compose up                    the demo app at http://localhost:8501
+# docker compose run --rm test         the test suite
+# docker compose run --rm check        the regression check (fails if any case that passed now fails)
+# docker compose run --rm warehouse    the Spark marts, verified against ground truth
+# docker compose -f docker-compose.yml -f docker-compose.mongo.yml up    traces in MongoDB
+x-env: &env
+  # Passed through from your shell or a .env file next to this file. Optional: without a key the app uses the simulated model.
+  - ANTHROPIC_API_KEY
+  - AGENTGUARD_MODEL
+  - AGENTGUARD_PRICE_IN
+  - AGENTGUARD_PRICE_OUT
+  - AGENTGUARD_PROVIDER
+  - OPENAI_API_KEY
+  - AZURE_OPENAI_API_KEY
+  - AZURE_OPENAI_ENDPOINT
+  - AZURE_OPENAI_DEPLOYMENT
+
+services:
+  app:
+    build: .
+    image: agentguard:dev
+    ports:
+      - "8501:8501"
+    environment: *env
+    volumes:
+      - agentguard-state:/app/state  # traces and AgentGuard runs survive restarts
+
+  test:
+    image: agentguard:dev
+    build: .
+    environment: *env
+    command: python -m pytest -q
+    profiles: ["tools"]
+
+  check:
+    image: agentguard:dev
+    build: .
+    environment: *env
+    command: python -m guard check
+    profiles: ["tools"]
+
+  warehouse:
+    image: agentguard:dev
+    build: .
+    command: python -m warehouse verify
+    profiles: ["tools"]
+
+volumes:
+  agentguard-state:

@@ -1,0 +1,14 @@
+[tool.ruff]
+line-length = 150
+target-version = "py311"
+extend-exclude = ["data/generated", "state", ".venv", "venv"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B"]
+ignore = ["E501", "B905", "E731"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["agent", "app", "data", "guard", "tracing", "warehouse"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/test_mongo.py" = ["E402"]

@@ -1,0 +1,24 @@
+# The same checks as .github/workflows/ci.yml, for Azure DevOps.
+# STATUS: written but not run. Only the GitHub Actions pipeline is exercised in this project.
+trigger:
+  - main
+pool:
+  vmImage: ubuntu-latest
+steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: "3.11"
+  - script: pip install -r requirements-dev.txt
+    displayName: Install
+  - script: ruff check .
+    displayName: Lint
+  - script: python -m pytest -q --junitxml=test-results.xml
+    displayName: Test
+  - script: python -m guard check
+    displayName: Regression check
+  - script: python -m warehouse verify
+    displayName: Warehouse check
+  - task: PublishTestResults@2
+    condition: always()
+    inputs:
+      testResultsFiles: test-results.xml

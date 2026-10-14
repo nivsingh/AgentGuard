@@ -1,0 +1,4 @@
+# Spark layer (needs a Java runtime). The agent and the app run without it.
+pyspark>=4.0
+pyarrow>=15
+pandas>=2.0

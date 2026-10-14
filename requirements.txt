@@ -1,0 +1,9 @@
+scipy>=1.11
+chromadb>=1.0
+scikit-learn>=1.4
+langgraph>=1.0
+opentelemetry-sdk>=1.25
+streamlit>=1.40
+anthropic>=0.40   # used when ANTHROPIC_API_KEY is set
+openai>=1.50      # used for OpenAI and Azure OpenAI
+pymongo>=4.6      # used when AGENTGUARD_MONGO_URL is set

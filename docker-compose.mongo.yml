@@ -1,0 +1,14 @@
+# Run the traces in MongoDB instead of SQLite:
+#   docker compose -f docker-compose.yml -f docker-compose.mongo.yml up
+services:
+  app:
+    environment:
+      AGENTGUARD_MONGO_URL: mongodb://mongo:27017
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo:7
+    volumes:
+      - mongo-data:/data/db
+volumes:
+  mongo-data:
